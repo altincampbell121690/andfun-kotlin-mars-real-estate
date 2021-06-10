@@ -26,24 +26,39 @@ import retrofit2.http.GET
 private const val BASE_URL = "https://mars.udacity.com/"
 
 // TODO Use the Moshi Builder toe Create a Moshi Object with the KotlinJsonAdapterFactory
-
+/**
+ * Build the Moshi object that Retrofit will be using, making sure to add the Kotlin adapter for
+ * full Kotlin compatibility.
+ */
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
 
-// TODO change converter factory when building the retrofit object to use moshi with our moshi object
+/**
+ * Use the Retrofit builder to build a retrofit object using a Moshi converter with our Moshi
+ * object.
+ */
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .baseUrl(BASE_URL)
     .build()
-//TODO implement the MarsApiService interface with @GET getProperties returning a  string
 
+/**
+ * A public interface that exposes the [getProperties] method
+ */
 interface  MarsApiService{
+    /**
+     * The @GET annotation indicates that the "realestate" endpoint will be requested with the GET
+     * HTTP method
+     */
     @GET("realestate") // get method that returns a string?
     suspend fun  getProperties(): List<MarsProperty> // now i dont need to parse the jason using GSON to create objects
 }
-// TODO Create the Marps API object using RetroFit to implement the MarsAPiService
+
+/**
+ * A public Api object that exposes the lazy-initialized Retrofit service
+ */
 object MarsApi {
     val retrofitService : MarsApiService by lazy{ // what does lazy mean?
         retrofit.create(MarsApiService::class.java)

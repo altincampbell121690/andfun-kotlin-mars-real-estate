@@ -20,8 +20,8 @@ package com.example.android.marsrealestate.overview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 
@@ -30,12 +30,17 @@ import kotlinx.coroutines.launch
  */
 class OverviewViewModel : ViewModel() {
 
-    // The internal MutableLiveData String that stores the status of the most recent request
+    // TODO (02) Rename response LiveData to status
+    // The internal MutableLiveData String that stores the most recent response
     private val _response = MutableLiveData<String>()
 
-    // The external immutable LiveData for the request status String
+    // The external immutable LiveData for the response String
     val response: LiveData<String>
         get() = _response
+
+    // TODO (03) Add the LiveData MarsProperty property with an internal Mutable and an external LiveData
+
+
 
     /**
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
@@ -45,17 +50,21 @@ class OverviewViewModel : ViewModel() {
     }
 
     /**
-     * Sets the value of the status LiveData to the Mars API status.
+     * Sets the value of the response LiveData to the Mars API status or the successful number of
+     * Mars properties retrieved.
      */
     private fun getMarsRealEstateProperties() {
-        //Launch Couroutine and place code in side
         viewModelScope.launch {
-            try{
+            try {
                 var listResult = MarsApi.retrofitService.getProperties()
+                // TODO (04) Update to set _property to the first MarsProperty from listResult
                 _response.value = "Success: ${listResult.size} Mars properties retrieved"
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 _response.value = "Failure: ${e.message}"
             }
         }
     }
+
+    /**
+     */
 }
